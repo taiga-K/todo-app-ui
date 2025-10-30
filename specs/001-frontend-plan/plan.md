@@ -1,98 +1,67 @@
-# Implementation Plan: [FEATURE]
+﻿# Implementation Plan: カンバン Todo UI フロントエンド
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+**Branch**: `001-frontend-plan` | **Date**: 2025-10-31 | **Spec**: `specs/001-frontend-plan/spec.md`
+**Input**: Feature specification from `/specs/001-frontend-plan/spec.md`
 
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
+**Note**: This templateは`/speckit.plan`ワークフローで利用される。
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+Todo APIと連携するカンバン形式のTodo UIをReact + TypeScriptで構築し、DaisyUIとshadcn/uiのハイブリッドデザインシステムを採用する。ユーザーがタスクの作成・更新・ステータス変更・フィルタリングを直感的かつアクセシブルに実行できる体験を提供する。
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: TypeScript 5系 / React 18  
+**Primary Dependencies**: DaisyUI, shadcn/ui, TanStack Query v5, Zustand, React Router v6.28, `@dnd-kit/core`, ky, openapi-typescript  
+**Storage**: フロント単体のためN/A（データは外部Todo API経由）  
+**Testing**: Vitest + React Testing Library, Playwright  
+**Target Platform**: Web（モバイル・タブレット・デスクトップ対応ブラウザ）  
+**Project Type**: Webフロントエンド単体  
+**Performance Goals**: 初回描画(LCP)1.5秒以内、インタラクション応答50ms以内、バンドルサイズ200KB(gz)以下  
+**Constraints**: WCAG 2.1 AA準拠、ドラッグ&ドロップとキーボード操作の両立、API呼び出しは型生成済みクライアントで統一  
+**Scale/Scope**: 中規模UI（3列カンバン + フィルタリング + モーダル編集）
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+`.specify/memory/constitution.md`は雛形状態で有効な原則が未定義のため、現時点で遵守すべき追加ガードは検出されない。正式な憲章策定が完了していない点はリスクとして認識し、Phase 0で確認する。
+
+*Phase 1再確認*: 新規設計成果物（research/data-model/contracts/quickstart）を踏まえても憲章由来の追加要求は発生せず、リスクは「憲章未定義」のみで継続。
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+specs/001-frontend-plan/
+├── plan.md
+├── research.md
+├── data-model.md
+├── quickstart.md
+├── contracts/
+└── tasks.md (Phase 2で作成)
 ```
 
-### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
-
-```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
+```
 frontend/
 ├── src/
 │   ├── components/
-│   ├── pages/
-│   └── services/
+│   ├── features/kanban/
+│   │   ├── columns/
+│   │   ├── cards/
+│   │   ├── hooks/
+│   │   └── services/
+│   ├── lib/
+│   └── routes/
+├── public/
 └── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+    ├── unit/
+    ├── integration/
+    └── e2e/
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: 単一のフロントエンドアプリ（React）を`frontend/`配下に配置し、機能別ディレクトリでカンバン機能をモジュール化する。テストはレイヤ別に`tests/`で管理する。
 
 ## Complexity Tracking
 
@@ -100,5 +69,4 @@ directories captured above]
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| N/A | N/A | N/A |
