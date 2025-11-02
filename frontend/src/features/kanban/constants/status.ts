@@ -11,6 +11,8 @@ export interface ColumnMeta {
   isDefault?: boolean;
 }
 
+// Note: All columns have isDefault: true to prepare for future custom column support
+// This allows distinguishing between system-defined columns and user-created custom columns
 export const DEFAULT_COLUMNS: ColumnMeta[] = [
   {
     key: 'backlog',

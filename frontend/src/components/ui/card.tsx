@@ -8,6 +8,10 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
 );
 Card.displayName = 'Card';
 
+// Note: CardHeader and CardContent both use 'card-body' class from DaisyUI
+// These components are designed to be used exclusively (not simultaneously in the same card)
+// CardHeader: Use for cards with header/title sections
+// CardContent: Use for cards with simple content without explicit headers
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('card-body', className)} {...props} />

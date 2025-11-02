@@ -7,11 +7,23 @@ interface DialogProps {
   children: React.ReactNode;
 }
 
+interface DialogContextValue {
+  dialogId: string;
+}
+
+const DialogContext = React.createContext<DialogContextValue | null>(null);
+
 export function Dialog({ open, onOpenChange, children }: DialogProps) {
+  const dialogId = React.useId();
+
   return (
-    <>
+    <DialogContext.Provider value={{ dialogId }}>
       {open && (
-        <dialog className="modal modal-open" onClick={() => onOpenChange(false)}>
+        <dialog
+          className="modal modal-open"
+          onClick={() => onOpenChange(false)}
+          aria-labelledby={`${dialogId}-title`}
+        >
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             {children}
           </div>
@@ -20,7 +32,7 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
           </form>
         </dialog>
       )}
-    </>
+    </DialogContext.Provider>
   );
 }
 
@@ -33,7 +45,14 @@ export function DialogHeader({ className, children }: React.HTMLAttributes<HTMLD
 }
 
 export function DialogTitle({ className, children }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn('text-lg font-bold', className)}>{children}</h3>;
+  const context = React.useContext(DialogContext);
+  const titleId = context ? `${context.dialogId}-title` : undefined;
+
+  return (
+    <h3 id={titleId} className={cn('text-lg font-bold', className)}>
+      {children}
+    </h3>
+  );
 }
 
 export function DialogFooter({ className, children }: React.HTMLAttributes<HTMLDivElement>) {
