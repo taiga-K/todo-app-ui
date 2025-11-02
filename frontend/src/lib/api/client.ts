@@ -51,6 +51,7 @@ const mockClient = {
       }
 
       if (url.includes('/archive')) {
+        // Extract ID from 'todos/{id}/archive'
         const id = url.split('/')[1];
         const todo = mockTodoStorage.find((t) => t.id === id);
         if (todo) {
@@ -60,6 +61,7 @@ const mockClient = {
       }
 
       if (url.includes('/restore')) {
+        // Extract ID from 'todos/{id}/restore'
         const id = url.split('/')[1];
         const todo = mockTodoStorage.find((t) => t.id === id);
         if (todo) {
@@ -75,7 +77,9 @@ const mockClient = {
     json: async () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const id = url.split('/')[1];
+      // Extract ID from 'todos/{id}' or 'todos/{id}/status'
+      const parts = url.split('/');
+      const id = parts[1];
       const todoIndex = mockTodoStorage.findIndex((t) => t.id === id);
 
       if (todoIndex >= 0 && options?.json) {
