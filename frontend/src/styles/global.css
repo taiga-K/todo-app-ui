@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Theme tokens */
+    --color-primary: theme('colors.primary');
+    --color-secondary: theme('colors.secondary');
+    --color-accent: theme('colors.accent');
+    
+    /* Spacing */
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    
+    /* Border radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+  }
+}
+
+@layer components {
+  /* Card styles */
+  .card-compact {
+    @apply card shadow-sm hover:shadow-md transition-shadow;
+  }
+  
+  /* Button variants */
+  .btn-action {
+    @apply btn btn-sm btn-ghost;
+  }
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  :root {
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.5rem;
+  }
+}
