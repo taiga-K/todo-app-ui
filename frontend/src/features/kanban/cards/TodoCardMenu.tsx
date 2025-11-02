@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface TodoCardMenuProps {
   onEdit: () => void;
@@ -8,17 +8,33 @@ interface TodoCardMenuProps {
 
 export function TodoCardMenu({ onEdit, onDelete, isArchived = false }: TodoCardMenuProps) {
   const [showConfirm, setShowConfirm] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleDelete = () => {
     if (showConfirm) {
       onDelete();
       setShowConfirm(false);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = undefined;
+      }
     } else {
       setShowConfirm(true);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
       // Auto-hide confirm after 3 seconds
-      setTimeout(() => setShowConfirm(false), 3000);
+      timeoutRef.current = setTimeout(() => setShowConfirm(false), 3000);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="dropdown dropdown-end" onClick={(e) => e.stopPropagation()}>

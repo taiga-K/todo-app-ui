@@ -1,18 +1,18 @@
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
 export default function RootLayout() {
   return (
     <div className="min-h-screen bg-base-200">
       <header className="navbar bg-base-100 shadow-sm">
         <div className="flex-1">
-          <a href="/" className="btn btn-ghost text-xl">
+          <Link to="/" className="btn btn-ghost text-xl">
             Todo App
-          </a>
+          </Link>
         </div>
         <div className="flex-none">
           <nav className="menu menu-horizontal px-1">
             <li>
-              <a href="/kanban">Kanban Board</a>
+              <Link to="/kanban">Kanban Board</Link>
             </li>
           </nav>
         </div>

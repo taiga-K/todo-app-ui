@@ -53,7 +53,7 @@ pnpm run dev
 - **モックモード**: APIキーが未設定の場合、自動的にモックデータを使用
 - モックデータは `src/lib/api/mockData.ts` で定義
 
-ブラウザで http://localhost:5173/kanban にアクセスしてKanbanボードを表示
+ブラウザで [http://localhost:5173/kanban](http://localhost:5173/kanban) にアクセスしてKanbanボードを表示
 
 ## 利用可能なコマンド
 

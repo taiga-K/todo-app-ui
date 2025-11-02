@@ -27,7 +27,7 @@ pnpm run api:generate
 pnpm run dev
 ```
 
-ブラウザで http://localhost:5173/kanban にアクセス
+ブラウザで [http://localhost:5173/kanban](http://localhost:5173/kanban) にアクセス
 
 > **Note**: APIキーが未設定の場合、自動的にモックデータを使用します
 
