@@ -1,13 +1,16 @@
 import type { Todo } from '@/features/kanban/hooks/useTodosQuery';
 import { PRIORITY_COLORS, PRIORITY_LABELS } from '@/features/kanban/constants/status';
 import { cn } from '@/lib/utils';
+import { TodoCardMenu } from './TodoCardMenu';
 
 interface TodoCardProps {
   todo: Todo;
   onClick?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export function TodoCard({ todo, onClick }: TodoCardProps) {
+export function TodoCard({ todo, onClick, onEdit, onDelete }: TodoCardProps) {
   const formattedDueDate = todo.dueDate
     ? new Date(todo.dueDate).toLocaleDateString('en-US', {
         month: 'short',
@@ -20,13 +23,26 @@ export function TodoCard({ todo, onClick }: TodoCardProps) {
   return (
     <div
       className={cn(
-        'card bg-base-100 shadow-sm hover:shadow-md transition-all cursor-pointer border border-base-300',
-        onClick && 'hover:border-primary'
+        'card bg-base-100 shadow-sm hover:shadow-md transition-all border border-base-300',
+        onClick && 'cursor-pointer hover:border-primary'
       )}
-      onClick={onClick}
     >
       <div className="card-body p-4 space-y-2">
-        <h3 className="card-title text-base font-semibold">{todo.title}</h3>
+        <div className="flex items-start justify-between gap-2">
+          <h3
+            className="card-title text-base font-semibold flex-1 cursor-pointer"
+            onClick={onClick}
+          >
+            {todo.title}
+          </h3>
+          {(onEdit || onDelete) && (
+            <TodoCardMenu
+              onEdit={() => onEdit?.()}
+              onDelete={() => onDelete?.()}
+              isArchived={!!todo.archivedAt}
+            />
+          )}
+        </div>
 
         {todo.description && (
           <p className="text-sm text-base-content/70 line-clamp-2">{todo.description}</p>
