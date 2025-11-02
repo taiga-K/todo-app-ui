@@ -16,7 +16,53 @@ const mockClient = {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       if (url.startsWith('todos')) {
-        return { data: mockTodoStorage };
+        // Parse query parameters for filtering/sorting
+        const urlObj = new URL(url, 'http://localhost');
+        const params = urlObj.searchParams;
+
+        let filteredTodos = [...mockTodoStorage];
+
+        // Filter by search
+        const search = params.get('search');
+        if (search) {
+          const searchLower = search.toLowerCase();
+          filteredTodos = filteredTodos.filter(
+            (todo) =>
+              todo.title.toLowerCase().includes(searchLower) ||
+              (todo.description && todo.description.toLowerCase().includes(searchLower))
+          );
+        }
+
+        // Filter by status
+        const statuses = params.getAll('status');
+        if (statuses.length > 0) {
+          filteredTodos = filteredTodos.filter((todo) => statuses.includes(todo.status));
+        }
+
+        // Filter by assignee
+        const assigneeId = params.get('assigneeId');
+        if (assigneeId) {
+          filteredTodos = filteredTodos.filter((todo) => todo.assignee?.id === assigneeId);
+        }
+
+        // Sort
+        const sort = params.get('sort');
+        if (sort === 'priority') {
+          const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
+          filteredTodos.sort((a, b) => {
+            const aPriority = a.priority ? priorityOrder[a.priority] : 999;
+            const bPriority = b.priority ? priorityOrder[b.priority] : 999;
+            return aPriority - bPriority;
+          });
+        } else if (sort === 'dueDate') {
+          filteredTodos.sort((a, b) => {
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+          });
+        }
+
+        return { data: filteredTodos };
       }
       throw new Error('Mock endpoint not found');
     },
