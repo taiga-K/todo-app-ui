@@ -17,12 +17,12 @@ const router = createBrowserRouter([
           <div className="hero min-h-[60vh]">
             <div className="hero-content text-center">
               <div className="max-w-md">
-                <h1 className="text-5xl font-bold">Welcome to Todo App</h1>
+                <h1 className="text-5xl font-bold">Todoアプリへようこそ</h1>
                 <p className="py-6">
-                  A simple and intuitive Kanban board to manage your daily tasks efficiently.
+                  日々のタスクを効率的に管理するための、シンプルで直感的なカンバンボード。
                 </p>
                 <a href="/kanban" className="btn btn-primary">
-                  Go to Kanban Board
+                  カンバンボードへ
                 </a>
               </div>
             </div>
