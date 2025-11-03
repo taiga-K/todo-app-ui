@@ -1,0 +1,1 @@
+{ "title": "UIの日本語化", "body": "Implement Japanese localization for the user interface." }
