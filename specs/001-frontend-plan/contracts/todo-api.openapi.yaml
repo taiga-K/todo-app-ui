@@ -1,0 +1,318 @@
+openapi: 3.0.3
+info:
+  title: Todo Board API
+  version: 1.0.0
+  description: >-
+    TodoアイテムをカンバンUIから操作するためのREST API。
+servers:
+  - url: https://api.example.com
+    description: Production
+  - url: https://staging.api.example.com
+    description: Staging
+paths:
+  /todos:
+    get:
+      summary: Todo一覧取得
+      description: ステータスやフィルター条件でTodoを一覧取得する。
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/TodoStatus'
+          style: form
+          explode: true
+          description: 表示対象のステータスキー複数指定
+        - in: query
+          name: search
+          schema:
+            type: string
+            maxLength: 120
+          description: タイトル/説明の部分一致検索文字列
+        - in: query
+          name: assigneeId
+          schema:
+            type: string
+          description: 担当者ID
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [priority, dueDate]
+          description: ソートキー
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Todo作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoCreateInput'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /todos/{id}:
+    get:
+      summary: Todo詳細取得
+      parameters:
+        - $ref: '#/components/parameters/TodoId'
+      responses:
+        '200':
+          description: 取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Todo更新
+      parameters:
+        - $ref: '#/components/parameters/TodoId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoUpdateInput'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /todos/{id}/status:
+    patch:
+      summary: Todoステータス更新
+      parameters:
+        - $ref: '#/components/parameters/TodoId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  $ref: '#/components/schemas/TodoStatus'
+      responses:
+        '200':
+          description: ステータス更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /todos/{id}/archive:
+    post:
+      summary: Todoアーカイブ
+      parameters:
+        - $ref: '#/components/parameters/TodoId'
+      responses:
+        '204':
+          description: アーカイブ完了
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /todos/{id}/restore:
+    post:
+      summary: Todo復元
+      parameters:
+        - $ref: '#/components/parameters/TodoId'
+      responses:
+        '200':
+          description: 復元成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  parameters:
+    TodoId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: Todo識別子
+
+  responses:
+    BadRequest:
+      description: 入力エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: 認証エラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: リソース未存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    Todo:
+      type: object
+      required: [id, title, status, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 2000
+          nullable: true
+        status:
+          $ref: '#/components/schemas/TodoStatus'
+        priority:
+          $ref: '#/components/schemas/TodoPriority'
+          nullable: true
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        assignee:
+          $ref: '#/components/schemas/Assignee'
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        archivedAt:
+          type: string
+          format: date-time
+          nullable: true
+    TodoCreateInput:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 2000
+        status:
+          $ref: '#/components/schemas/TodoStatus'
+        priority:
+          $ref: '#/components/schemas/TodoPriority'
+        dueDate:
+          type: string
+          format: date-time
+        assigneeId:
+          type: string
+    TodoUpdateInput:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 120
+        description:
+          type: string
+          maxLength: 2000
+        status:
+          $ref: '#/components/schemas/TodoStatus'
+        priority:
+          $ref: '#/components/schemas/TodoPriority'
+        dueDate:
+          type: string
+          format: date-time
+        assigneeId:
+          type: string
+        archived:
+          type: boolean
+          description: trueでアーカイブ、falseで復元
+    TodoStatus:
+      type: string
+      description: ステータスキー。APIが追加キーを返す場合はUIで動的に列生成する。
+      enum: [backlog, in_progress, done, blocked, archived]
+    TodoPriority:
+      type: string
+      enum: [low, medium, high, urgent]
+    Assignee:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        avatarUrl:
+          type: string
+          format: uri
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              issue:
+                type: string
