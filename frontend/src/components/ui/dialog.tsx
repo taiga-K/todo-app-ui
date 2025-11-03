@@ -23,6 +23,7 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
           className="modal modal-open"
           onClick={() => onOpenChange(false)}
           aria-labelledby={`${dialogId}-title`}
+          aria-modal="true"
         >
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             {children}
