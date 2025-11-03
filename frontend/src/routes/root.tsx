@@ -6,13 +6,13 @@ export default function RootLayout() {
       <header className="navbar bg-base-100 shadow-sm">
         <div className="flex-1">
           <Link to="/" className="btn btn-ghost text-xl">
-            Todo App
+            Todoアプリ
           </Link>
         </div>
         <div className="flex-none">
           <nav className="menu menu-horizontal px-1">
             <li>
-              <Link to="/kanban">Kanban Board</Link>
+              <Link to="/kanban">カンバンボード</Link>
             </li>
           </nav>
         </div>

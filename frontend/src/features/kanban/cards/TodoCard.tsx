@@ -12,7 +12,7 @@ interface TodoCardProps {
 
 export function TodoCard({ todo, onClick, onEdit, onDelete }: TodoCardProps) {
   const formattedDueDate = todo.dueDate
-    ? new Date(todo.dueDate).toLocaleDateString('en-US', {
+    ? new Date(todo.dueDate).toLocaleDateString('ja-JP', {
         month: 'short',
         day: 'numeric',
       })

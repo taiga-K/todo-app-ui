@@ -18,13 +18,13 @@ export function FilterBar() {
   const hasActiveFilters = search || sortBy || priority;
 
   const sortOptions = [
-    { value: '', label: 'Default' },
-    { value: 'priority', label: 'Priority' },
-    { value: 'dueDate', label: 'Due Date' },
+    { value: '', label: 'デフォルト' },
+    { value: 'priority', label: '優先度' },
+    { value: 'dueDate', label: '期限日' },
   ];
 
   const priorityOptions = [
-    { value: '', label: 'All Priorities' },
+    { value: '', label: 'すべての優先度' },
     ...Object.entries(PRIORITY_LABELS).map(([value, label]) => ({ value, label })),
   ];
 
@@ -34,11 +34,11 @@ export function FilterBar() {
         {/* Search */}
         <div className="form-control flex-1 min-w-[200px]">
           <label className="label">
-            <span className="label-text text-sm">Search</span>
+            <span className="label-text text-sm">検索</span>
           </label>
           <Input
             type="text"
-            placeholder="Search todos..."
+            placeholder="Todoを検索..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="input-sm"
@@ -48,7 +48,7 @@ export function FilterBar() {
         {/* Priority Filter */}
         <div className="form-control min-w-[180px]">
           <label className="label">
-            <span className="label-text text-sm">Priority</span>
+            <span className="label-text text-sm">優先度</span>
           </label>
           <Select
             options={priorityOptions}
@@ -63,7 +63,7 @@ export function FilterBar() {
         {/* Sort By */}
         <div className="form-control min-w-[180px]">
           <label className="label">
-            <span className="label-text text-sm">Sort By</span>
+            <span className="label-text text-sm">並び順</span>
           </label>
           <Select
             options={sortOptions}
@@ -78,7 +78,7 @@ export function FilterBar() {
           <button
             className="btn btn-ghost btn-sm"
             onClick={clearFilters}
-            aria-label="Clear all filters"
+            aria-label="すべてのフィルターをクリア"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +94,7 @@ export function FilterBar() {
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-            Clear
+            クリア
           </button>
         )}
       </div>

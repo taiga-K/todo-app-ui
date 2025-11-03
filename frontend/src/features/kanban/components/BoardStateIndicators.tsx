@@ -2,7 +2,7 @@ interface LoadingStateProps {
   message?: string;
 }
 
-export function LoadingState({ message = 'Loading todos...' }: LoadingStateProps) {
+export function LoadingState({ message = 'Todoを読み込み中...' }: LoadingStateProps) {
   return (
     <div className="flex items-center justify-center min-h-[400px]">
       <div className="text-center">
@@ -36,12 +36,12 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
           />
         </svg>
         <div className="flex-1">
-          <h3 className="font-bold">Error loading todos</h3>
+          <h3 className="font-bold">Todoの読み込みエラー</h3>
           <p className="text-sm">{error.message}</p>
         </div>
         {onRetry && (
           <button className="btn btn-sm" onClick={onRetry}>
-            Retry
+            再試行
           </button>
         )}
       </div>
@@ -58,7 +58,7 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  message = 'No todos found',
+  message = 'Todoが見つかりません',
   action,
 }: EmptyStateProps) {
   return (

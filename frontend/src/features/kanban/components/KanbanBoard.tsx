@@ -123,9 +123,9 @@ export function KanbanBoard() {
     return (
       <>
         <EmptyState
-          message="No todos yet. Create one to get started!"
+          message="まだTodoがありません。作成して始めましょう！"
           action={{
-            label: 'Create Todo',
+            label: 'Todoを作成',
             onClick: handleCreateTodo,
           }}
         />
@@ -150,10 +150,10 @@ export function KanbanBoard() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Kanban Board</h1>
+              <h1 className="text-2xl font-bold">カンバンボード</h1>
               {hasActiveFilters && (
                 <p className="text-sm text-base-content/60 mt-1">
-                  Showing {filteredCount} of {totalTodos} todos
+                  {totalTodos}件中{filteredCount}件を表示
                 </p>
               )}
             </div>
@@ -172,7 +172,7 @@ export function KanbanBoard() {
                   d="M12 4v16m8-8H4"
                 />
               </svg>
-              Add Todo
+              Todoを追加
             </button>
           </div>
 
@@ -192,7 +192,7 @@ export function KanbanBoard() {
                 >
                   {columnTodos.length === 0 ? (
                     <div className="text-center text-base-content/40 py-8">
-                      <p>No tasks</p>
+                      <p>タスクなし</p>
                     </div>
                   ) : (
                     columnTodos.map((todo) => (

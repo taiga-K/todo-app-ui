@@ -85,7 +85,7 @@ export function TodoFormDialog({
   }));
 
   const priorityOptions = [
-    { value: '', label: 'None' },
+    { value: '', label: 'なし' },
     ...Object.entries(PRIORITY_LABELS).map(([value, label]) => ({ value, label })),
   ];
 
@@ -94,7 +94,7 @@ export function TodoFormDialog({
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{initialData ? 'Edit Todo' : 'Create New Todo'}</DialogTitle>
+            <DialogTitle>{initialData ? 'Todoを編集' : '新しいTodoを作成'}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
@@ -102,12 +102,12 @@ export function TodoFormDialog({
             <div className="form-control">
               <label className="label">
                 <span className="label-text">
-                  Title <span className="text-error">*</span>
+                  タイトル <span className="text-error">*</span>
                 </span>
               </label>
               <Input
                 type="text"
-                placeholder="Enter todo title"
+                placeholder="Todoのタイトルを入力"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className={getError('title') ? 'input-error' : ''}
@@ -122,11 +122,11 @@ export function TodoFormDialog({
             {/* Description */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Description</span>
+                <span className="label-text">説明</span>
               </label>
               <textarea
                 className="textarea textarea-bordered w-full"
-                placeholder="Enter description (optional)"
+                placeholder="説明を入力（任意）"
                 rows={3}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -141,7 +141,7 @@ export function TodoFormDialog({
             {/* Status */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Status</span>
+                <span className="label-text">ステータス</span>
               </label>
               <Select
                 options={statusOptions}
@@ -155,7 +155,7 @@ export function TodoFormDialog({
             {/* Priority */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Priority</span>
+                <span className="label-text">優先度</span>
               </label>
               <Select
                 options={priorityOptions}
@@ -172,7 +172,7 @@ export function TodoFormDialog({
             {/* Due Date */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Due Date</span>
+                <span className="label-text">期限日</span>
               </label>
               <Input
                 type="date"
@@ -194,18 +194,18 @@ export function TodoFormDialog({
               onClick={() => onOpenChange(false)}
               disabled={isLoading}
             >
-              Cancel
+              キャンセル
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <span className="loading loading-spinner loading-sm mr-2"></span>
-                  Saving...
+                  保存中...
                 </>
               ) : initialData ? (
-                'Update'
+                '更新'
               ) : (
-                'Create'
+                '作成'
               )}
             </Button>
           </DialogFooter>

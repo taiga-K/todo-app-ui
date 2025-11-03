@@ -16,32 +16,32 @@ export interface ColumnMeta {
 export const DEFAULT_COLUMNS: ColumnMeta[] = [
   {
     key: 'backlog',
-    displayName: 'Backlog',
+    displayName: 'バックログ',
     order: 0,
-    description: 'Tasks to be started',
+    description: '開始予定のタスク',
     isDefault: true,
   },
   {
     key: 'in_progress',
-    displayName: 'In Progress',
+    displayName: '進行中',
     order: 1,
-    description: 'Currently working on',
+    description: '作業中のタスク',
     isDefault: true,
   },
   {
     key: 'done',
-    displayName: 'Done',
+    displayName: '完了',
     order: 2,
-    description: 'Completed tasks',
+    description: '完了したタスク',
     isDefault: true,
   },
 ];
 
 export const PRIORITY_LABELS: Record<TodoPriority, string> = {
-  low: 'Low',
-  medium: 'Medium',
-  high: 'High',
-  urgent: 'Urgent',
+  low: '低',
+  medium: '中',
+  high: '高',
+  urgent: '緊急',
 };
 
 export const PRIORITY_COLORS: Record<TodoPriority, string> = {
