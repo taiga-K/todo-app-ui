@@ -30,7 +30,10 @@ export function TodoCard({ todo, onClick, onEdit, onDelete }: TodoCardProps) {
       <div className="card-body p-4 space-y-2">
         <div className="flex items-start justify-between gap-2">
           <h3
-            className="card-title text-base font-semibold flex-1 cursor-pointer"
+            className={cn(
+              'card-title text-base font-semibold flex-1',
+              onClick && 'cursor-pointer'
+            )}
             onClick={onClick}
           >
             {todo.title}
