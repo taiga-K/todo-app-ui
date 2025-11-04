@@ -1,0 +1,108 @@
+import type { Todo } from '@/features/kanban/hooks/useTodosQuery';
+import { PRIORITY_COLORS, PRIORITY_LABELS } from '@/features/kanban/constants/status';
+import { cn } from '@/lib/utils';
+import { TodoCardMenu } from './TodoCardMenu';
+
+interface TodoCardProps {
+  todo: Todo;
+  onClick?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+}
+
+export function TodoCard({ todo, onClick, onEdit, onDelete }: TodoCardProps) {
+  const formattedDueDate = todo.dueDate
+    ? new Date(todo.dueDate).toLocaleDateString('ja-JP', {
+        month: 'short',
+        day: 'numeric',
+      })
+    : null;
+
+  const isOverdue = todo.dueDate && new Date(todo.dueDate) < new Date() && todo.status !== 'done';
+
+  return (
+    <div
+      className={cn(
+        'card bg-base-100 shadow-sm hover:shadow-md transition-all border border-base-300',
+        onClick && 'cursor-pointer hover:border-primary'
+      )}
+    >
+      <div className="card-body p-4 space-y-2">
+        <div className="flex items-start justify-between gap-2">
+          <h3
+            className={cn(
+              'card-title text-base font-semibold flex-1',
+              onClick && 'cursor-pointer'
+            )}
+            onClick={onClick}
+          >
+            {todo.title}
+          </h3>
+          {(onEdit || onDelete) && (
+            <TodoCardMenu
+              onEdit={() => onEdit?.()}
+              onDelete={() => onDelete?.()}
+              isArchived={!!todo.archivedAt}
+            />
+          )}
+        </div>
+
+        {todo.description && (
+          <p className="text-sm text-base-content/70 line-clamp-2">{todo.description}</p>
+        )}
+
+        <div className="flex flex-wrap gap-2 items-center">
+          {todo.priority && (
+            <span className={cn('badge badge-sm', PRIORITY_COLORS[todo.priority])}>
+              {PRIORITY_LABELS[todo.priority]}
+            </span>
+          )}
+
+          {formattedDueDate && (
+            <span
+              className={cn(
+                'badge badge-sm badge-outline',
+                isOverdue && 'badge-error'
+              )}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3 w-3 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              {formattedDueDate}
+            </span>
+          )}
+
+          {todo.assignee && (
+            <div className="flex items-center gap-1 text-xs text-base-content/70">
+              {todo.assignee.avatarUrl ? (
+                <img
+                  src={todo.assignee.avatarUrl}
+                  alt={todo.assignee.name}
+                  className="w-5 h-5 rounded-full"
+                />
+              ) : (
+                <div className="avatar placeholder">
+                  <div className="bg-neutral text-neutral-content rounded-full w-5">
+                    <span className="text-xs">{todo.assignee.name[0]}</span>
+                  </div>
+                </div>
+              )}
+              <span>{todo.assignee.name}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
